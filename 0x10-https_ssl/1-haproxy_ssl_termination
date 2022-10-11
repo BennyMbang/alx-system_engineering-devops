@@ -1,9 +1,12 @@
-groxy
-        stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
-	        stats timeout 30s
-		        user haproxy
-			        group haproxy
-				        daemon
+global
+        log /dev/log    local0
+	        log /dev/log    local1 notice
+		        chroot /var/lib/haproxy
+			        stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
+				        stats timeout 30s
+					        user haproxy
+						        group haproxy
+							        daemon
 
         # Default SSL material locations
 	        ca-base /etc/ssl/certs
@@ -36,8 +39,9 @@ backend bennymbang.tech-backend
 	        server 9988-web-01 3.236.66.34:80 check
 		        server 9988-web-02 44.210.149.226:80 check
 			frontend bennymbang.tech-frontend
-			        bind *:443 ssl crt  /etc/letsencrypt/live/www.bennymbang.tech/fullchain.pem
-				        mode http
-					        default_backend bennymbang.tech-backend
-						#--bennymbang.tech-params-end--
-						
+			        bind *:80
+				        bind *:443 ssl crt  /etc/letsencrypt/live/www.bennymbang.tech/fullchain.pem
+					        mode http
+						        default_backend bennymbang.tech-backend
+							#--bennymbang.tech-params-end--
+							
